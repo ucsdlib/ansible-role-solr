@@ -1,0 +1,24 @@
+---
+# defaults file for ucsdlib.solr
+
+# 6.2.1 is out
+solr_version: 6.2.1
+
+solr_mirror: http://mirrors.ocf.berkeley.edu/apache/
+#solr_mirror: http://supergsego.com/apache/
+# http://archive.apache.org/dist/ is the upstream
+
+# Application Defaults
+solr_install_dir: /opt
+solr_live_dir: /var/solr
+solr_port: 8983
+solr_service_name: solr
+solr_user: solr
+
+solr_download_dir: /tmp/solr
+solr_set_default: true
+solr_set_usr_bin: false
+solr_webproxy: {}
+#  http_proxy: http://webproxy:3128/'
+# If you use this, rememer to remove the {}
+#solr_memory: 4G

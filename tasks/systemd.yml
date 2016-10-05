@@ -1,0 +1,19 @@
+---
+
+# Template based on https://confluence.t5.fi/display/~stefan.roos/2015/04/01/Creating+systemd+unit+(service)+for+Apache+Solr
+- name: Install systemd service file
+  template:
+    src: '{{ item }}.j2'
+    dest: /etc/systemd/system/{{ item }}
+  with_items:
+    - solr.service
+  when: ansible_service_mgr == 'systemd'
+  become: true
+
+- name: Enable Solr service
+  service:
+    name: solr
+    state: started
+    enabled: yes
+  when: ansible_service_mgr == 'systemd'
+  become: true

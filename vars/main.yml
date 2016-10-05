@@ -1,0 +1,5 @@
+---
+# vars file for ucsdlib.solr
+
+solr_tarball: solr-{{ solr_version }}.tgz
+solr_directory: solr-{{ solr_version }}

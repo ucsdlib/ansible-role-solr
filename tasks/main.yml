@@ -1,0 +1,93 @@
+---
+# tasks file for ucsdlib.solr
+
+- name: Install Dependencies
+  package:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - lsof
+  become: true
+
+- name: Is Solr Installed Already?
+  stat:
+    path: '{{ solr_install_dir ~ "/" ~ solr_directory ~ "/bin/solr" }}'
+  register: solr_bin
+
+- block:
+  - name: "Create Install Directory"
+    file:
+      path: '{{ solr_install_dir }}'
+      state: directory
+      owner: root
+      group: root
+      mode: 0700
+    become: true
+    when: false
+    tags:
+      - solr
+      - setup
+
+# TODO: Secure Directory
+
+  - name: Create download Directory
+    file:
+      path: '{{ solr_download_dir }}/solr'
+      state: directory
+      mode: 0700
+    tags:
+      - solr
+      - setup
+
+  - name: "Download tgz file"
+    get_url:
+      url: '{{ solr_mirror }}/lucene/solr/{{ solr_version }}/{{ solr_tarball }}'
+      dest: '{{ solr_download_dir }}/solr/{{ solr_tarball }}'
+      force: yes
+    environment:
+      '{{ solr_webproxy | default ({}) }}'
+    tags:
+      - solr
+      - setup
+
+  - name: Unpack Solr
+    unarchive:
+      src: '{{ solr_download_dir }}/solr/{{ solr_tarball }}'
+      dest: '{{ solr_download_dir }}/solr'
+      copy: no
+    tags:
+      - solr
+      - setup
+
+  - name: Run Solr Installer
+    command: >
+      {{ solr_download_dir }}/solr/solr-{{ solr_version }}/bin/install_solr_service.sh
+        {{ solr_download_dir }}/solr/{{ solr_tarball }}
+        -d {{ solr_live_dir }}
+        -i {{ solr_install_dir }}
+        -p {{ solr_port }}
+        -s {{ solr_service_name }}
+        -u {{ solr_user }}
+        -f
+    args:
+      creates: '{{ solr_install_dir }}/bin/solr'
+    become: true
+
+  - name: Remove Install File
+    file:
+      path: '{{ solr_download_dir }}'
+      state: absent
+    tags:
+      - solr
+      - setup
+
+  when: not solr_bin.stat.exists
+
+- name: Set Default Solr
+  file:
+    path: '{{ solr_install_dir }}/solr'
+    src: '{{ solr_install_dir ~ "/" ~ solr_directory }}'
+    state: link
+  become: true
+  when: solr_set_default
+  ignore_errors: '{{ ansible_check_mode }}'
