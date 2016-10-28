@@ -7,7 +7,6 @@
     state: present
   with_items:
     - lsof
-  become: true
 
 - name: Is Solr Installed Already?
   stat:
@@ -22,7 +21,6 @@
       owner: root
       group: root
       mode: 0700
-    become: true
     when: false
     tags:
       - solr
@@ -71,7 +69,6 @@
         -f
     args:
       creates: '{{ solr_install_dir }}/bin/solr'
-    become: true
 
   - name: Remove Install File
     file:
@@ -88,6 +85,5 @@
     path: '{{ solr_install_dir }}/solr'
     src: '{{ solr_install_dir ~ "/" ~ solr_directory }}'
     state: link
-  become: true
   when: solr_set_default
   ignore_errors: '{{ ansible_check_mode }}'
