@@ -22,6 +22,8 @@ install:
   - printf '[defaults]\nroles_path=../' >ansible.cfg
 
 script:
+  # make it look like the dependent role is installed (this is a hack)
+  - mkdir ../ucsdlib.java
   # Basic role syntax check
   - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
 
