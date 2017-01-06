@@ -1,11 +1,9 @@
 ---
 # defaults file for ucsdlib.solr
 
-# 6.2.1 is out
-solr_version: 6.2.1
+solr_version: 6.3.0
 
-solr_mirror: http://mirrors.ocf.berkeley.edu/apache/
-#solr_mirror: http://supergsego.com/apache/
+solr_mirror: http://archive.apache.org/dist/
 # http://archive.apache.org/dist/ is the upstream
 
 # Application Defaults
