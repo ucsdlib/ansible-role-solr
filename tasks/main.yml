@@ -67,6 +67,7 @@
         -s {{ solr_service_name }}
         -u {{ solr_user }}
         -f
+        -n
     args:
       creates: '{{ solr_install_dir }}/bin/solr'
 
@@ -87,3 +88,14 @@
     state: link
   when: solr_set_default
   ignore_errors: '{{ ansible_check_mode }}'
+
+- name: Enable Solr
+  service:
+    name: solr
+    enabled: '{{ solr_enabled }}'
+
+- name: Start Solr
+  service:
+    name: solr
+    state: started
+  when: solr_start

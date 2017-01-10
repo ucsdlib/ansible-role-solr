@@ -6,6 +6,9 @@ solr_version: 6.3.0
 solr_mirror: http://archive.apache.org/dist/
 # http://archive.apache.org/dist/ is the upstream
 
+solr_enable: true
+solr_start: true
+
 # Application Defaults
 solr_install_dir: /opt
 solr_live_dir: /var/solr

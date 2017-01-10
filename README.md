@@ -11,8 +11,10 @@ Requires Java, which is installed via dependency.
 Role Variables
 --------------
 
-* `solr_version`: Version to install (default: 6.2.1)
+* `solr_version`: Version to install (default: 6.3.0)
 * `solr_mirror`: Mirror to download from (default: http://archive.apache.org/dist/)
+* `solr_start`: Flag to start the Solr service immediately (defaut: true)
+* `solr_enabled`: Flag to start Solr at boot (default: true)
 
 Solr Installation Options:
 * `solr_install_dir`: (`-i`) default: /opt
