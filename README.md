@@ -14,7 +14,7 @@ Role Variables
 * `solr_version`: Version to install (default: 6.3.0)
 * `solr_mirror`: Mirror to download from (default: http://archive.apache.org/dist/)
 * `solr_start`: Flag to start the Solr service immediately (defaut: true)
-* `solr_enabled`: Flag to start Solr at boot (default: true)
+* `solr_enable`: Flag to start Solr at boot (default: true)
 
 Solr Installation Options:
 * `solr_install_dir`: (`-i`) default: /opt
@@ -39,6 +39,16 @@ Example Playbook
     - hosts: servers
       roles:
          - { role: ucsdlib.solr, solr_version: 6.2.0 }
+
+Notes
+-----
+
+Included is the `helpers/download.yml` playbook which will download the Solr
+tarball and cache it, making future deploys faster. The role itself will have
+to be writable by the calling user (or at least the files directory within the
+role).
+
+`ansible-playbook roles/ucsdlib.solr/helpers/download.yml`
 
 License
 -------

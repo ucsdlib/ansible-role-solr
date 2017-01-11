@@ -12,6 +12,9 @@
   stat:
     path: '{{ solr_install_dir ~ "/" ~ solr_directory ~ "/bin/solr" }}'
   register: solr_bin
+  tags:
+    - solr
+    - setup
 
 - block:
   - name: "Create Install Directory"
@@ -37,16 +40,27 @@
       - solr
       - setup
 
-  - name: "Download tgz file"
-    get_url:
-      url: '{{ solr_mirror }}/lucene/solr/{{ solr_version }}/{{ solr_tarball }}'
-      dest: '{{ solr_download_dir }}/solr/{{ solr_tarball }}'
-      force: yes
-    environment:
-      '{{ solr_webproxy | default ({}) }}'
-    tags:
-      - solr
-      - setup
+  - block:
+    - name: "Copy cached tgz file, if available"
+      copy:
+       src: '{{ solr_tarball }}'
+       dest: '{{ solr_download_dir}}/solr'
+      tags:
+        - solr
+        - setup
+
+    rescue:
+
+    - name: "Download Upstream tgz file"
+      get_url:
+        url: '{{ solr_mirror }}/lucene/solr/{{ solr_version }}/{{ solr_tarball }}'
+        dest: '{{ solr_download_dir }}/solr/{{ solr_tarball }}'
+        force: yes
+      environment:
+        '{{ solr_webproxy | default ({}) }}'
+      tags:
+        - solr
+        - setup
 
   - name: Unpack Solr
     unarchive:
@@ -70,6 +84,9 @@
         -n
     args:
       creates: '{{ solr_install_dir }}/bin/solr'
+    tags:
+      - solr
+      - setup
 
   - name: Remove Install File
     file:
@@ -88,14 +105,21 @@
     state: link
   when: solr_set_default
   ignore_errors: '{{ ansible_check_mode }}'
+  tags:
+    - solr
+    - setup
 
 - name: Enable Solr
   service:
     name: solr
-    enabled: '{{ solr_enabled }}'
+    enabled: '{{ solr_enable }}'
+  tags:
+    - solr
 
 - name: Start Solr
   service:
     name: solr
     state: started
   when: solr_start
+  tags:
+    - solr

@@ -20,4 +20,5 @@ galaxy_info:
   - hydra
 
 dependencies:
-  - { role: ucsdlib.java, java_set_compatibility_symlink: true }
+  - src: ucsdlib.java
+    java_set_compatibility_symlink: true
