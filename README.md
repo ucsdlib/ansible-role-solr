@@ -3,6 +3,8 @@ Solr
 
 Installs Apache Solr from upstream release.
 
+[![Build Status](https://travis-ci.org/ucsdlib/ansible-role-solr.svg?branch=master)](https://travis-ci.org/ucsdlib/ansible-role-solr)
+
 Requirements
 ------------
 
