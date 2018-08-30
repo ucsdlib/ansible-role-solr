@@ -8,7 +8,7 @@ Installs Apache Solr from upstream release.
 Requirements
 ------------
 
-Requires Java, which is installed via dependency.
+Requires Java.
 
 Role Variables
 --------------
@@ -29,10 +29,6 @@ Solr Installation Options:
 * `solr_set_default`: Set "/opt/solr" symlink (default: true)
 * `solr_set_usr_bin`: Set "/usr/local/bin/solr" symlink (default: false)
 
-Dependencies
-------------
-
-Uses ucsdlib.java to install java, and sets `/usr/local/bin` symlink.
 
 Example Playbook
 ----------------
