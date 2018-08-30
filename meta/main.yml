@@ -16,9 +16,6 @@ galaxy_info:
   #  - trusty
   #  - xenial
 
-  galaxy_tags:
-  - hydra
-
 dependencies:
   - name: ucsdlib.java
     java_set_compatibility_symlink: true
