@@ -28,7 +28,6 @@ Solr Installation Options:
 * `solr_download_dir`: Temporary directory to download and extract (default: /tmp/solr)
 * `solr_set_default`: Set "/opt/solr" symlink (default: true)
 * `solr_set_usr_bin`: Set "/usr/local/bin/solr" symlink (default: false)
-* `solr_webproxy`: Webproxy to use (default: _none_)
 
 Dependencies
 ------------
@@ -51,6 +50,14 @@ to be writable by the calling user (or at least the files directory within the
 role).
 
 `ansible-playbook roles/ucsdlib.solr/helpers/download.yml`
+
+Use the `environment:` keyword to set a proxy.
+
+    - hosts: servers
+      environment:
+        http_proxy: http://webproxy:3128/
+      roles:
+        - role: ucsdlib.solr
 
 License
 -------

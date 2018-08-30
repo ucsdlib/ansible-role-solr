@@ -19,7 +19,4 @@ solr_user: solr
 solr_download_dir: /tmp/solr
 solr_set_default: true
 solr_set_usr_bin: false
-solr_webproxy: {}
-#  http_proxy: http://webproxy:3128/'
-# If you use this, rememer to remove the {}
 #solr_memory: 4G
