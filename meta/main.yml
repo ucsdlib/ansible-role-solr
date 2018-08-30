@@ -15,7 +15,3 @@ galaxy_info:
     - precise
   #  - trusty
   #  - xenial
-
-dependencies:
-  - name: ucsdlib.java
-    java_set_compatibility_symlink: true

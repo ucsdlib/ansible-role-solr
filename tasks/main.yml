@@ -1,6 +1,18 @@
 ---
 # tasks file for ucsdlib.solr
 
+- name: Get java version
+  command: java -version
+  changed_when: false
+  check_mode: no
+  register: solr_java_version
+  failed_when: false
+
+- name: Ensure a java is present
+  assert:
+    that: solr_java_version.rc == 0
+  when: not ansible_check_mode
+
 - name: Install Dependencies
   package:
     name: '{{ item }}'
@@ -40,33 +52,40 @@
       - solr
       - setup
 
-  - block:
-    - name: "Copy cached tgz file, if available"
-      copy:
-       src: '{{ solr_tarball }}'
-       dest: '{{ solr_download_dir}}/solr'
-      tags:
-        - solr
-        - setup
+  - name: Check for cached tarball
+    stat:
+      path: '{{ role_path }}/files/{{ solr_tarball }}'
+    register: solr_tgz_cached
+    connection: local
+    tags:
+      - solr
+      - setup
 
-    rescue:
+  - name: "Copy cached tarball file, if available"
+    copy:
+      src: '{{ solr_tarball }}'
+      dest: '{{ solr_download_dir }}/solr'
+    when: solr_tgz_cached.stat.exists
+    tags:
+      - solr
+      - setup
 
-    - name: "Download Upstream tgz file"
-      get_url:
-        url: '{{ solr_mirror }}/lucene/solr/{{ solr_version }}/{{ solr_tarball }}'
-        dest: '{{ solr_download_dir }}/solr/{{ solr_tarball }}'
-        force: yes
-      environment:
-        '{{ solr_webproxy | default ({}) }}'
-      tags:
-        - solr
-        - setup
+  - name: "Download Upstream tarball"
+    get_url:
+      url: '{{ solr_mirror }}/lucene/solr/{{ solr_version }}/{{ solr_tarball }}'
+      dest: '{{ solr_download_dir }}/solr/{{ solr_tarball }}'
+      force: yes
+    when: not solr_tgz_cached.stat.exists
+    tags:
+      - solr
+      - setup
 
   - name: Unpack Solr
     unarchive:
       src: '{{ solr_download_dir }}/solr/{{ solr_tarball }}'
       dest: '{{ solr_download_dir }}/solr'
       copy: no
+    when: not ansible_check_mode
     tags:
       - solr
       - setup
@@ -103,7 +122,9 @@
     path: '{{ solr_install_dir }}/solr'
     src: '{{ solr_install_dir ~ "/" ~ solr_directory }}'
     state: link
-  when: solr_set_default
+  when:
+    - solr_set_default
+    - not ansible_check_mode
   ignore_errors: '{{ ansible_check_mode }}'
   tags:
     - solr
@@ -113,6 +134,8 @@
   service:
     name: solr
     enabled: '{{ solr_enable }}'
+  when:
+    - ansible_system != "Darwin"
   tags:
     - solr
 
@@ -120,6 +143,8 @@
   service:
     name: solr
     state: started
-  when: solr_start
+  when:
+    - solr_start
+    - ansible_system != "Darwin"
   tags:
     - solr
