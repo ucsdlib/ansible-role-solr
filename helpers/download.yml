@@ -16,5 +16,3 @@
       url: '{{ solr_mirror }}/lucene/solr/{{ solr_version }}/{{ solr_tarball }}'
       dest: '../files/{{ solr_tarball }}'
       force: '{{ solr_force_download | default (false) }}'
-    environment:
-      '{{ solr_webproxy | default ({}) }}'
